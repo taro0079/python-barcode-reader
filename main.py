@@ -1,7 +1,9 @@
 import array
 import base64
+from cmath import rect
 import cv2 as cv
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import numpy as np
 from pyzbar.pyzbar import decode
 
@@ -39,6 +41,7 @@ from pyzbar.pyzbar import decode
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/decode", methods=["POST"])
@@ -47,12 +50,26 @@ def decode_barcode():
     image_data = base64.b64decode(data)
     np_arr = np.frombuffer(image_data, np.uint8)
     img = cv.imdecode(np_arr, cv.IMREAD_COLOR)
+    # cv.imwrite("test.jpg", img)
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    barcodes = decode(img)
+    barcodes = decode(gray)
     result = []
     for barcode in barcodes:
         barcode_data = barcode.data.decode("utf-8")
-        result.append({"data": barcode_data, "rect": barcode.rect})
+        rect = barcode.rect
+        result.append(
+            {
+                "data": barcode_data,
+                "rect": {
+                    "left": rect.left,
+                    "top": rect.top,
+                    "width": rect.width,
+                    "height": rect.height,
+                },
+            }
+        )
+    print(result)
     return jsonify(result)
 
 
