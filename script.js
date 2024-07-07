@@ -57,8 +57,41 @@ pointCalculateButton.addEventListener("click", () => {
   } else {
     const customerId = savedCustomer[0].id
     const productIds = products.map((product) => product.id)
+    fetchCalculatePoint(customerId, productIds)
+      .then((response) => {
+        console.log(response)
+        alert(`付与されるポイントは${response.adding_point}です`)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 })
+
+const fetchCalculatePoint = (customerId, productIds) => {
+  const url = "http://localhost:3000/points/calculate"
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify({
+      customer_id: customerId,
+      product_ids: productIds,
+      check_flag: true
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
+    })
+    .catch((err) => {
+      console.error("Fetch error: ", err)
+    })
+}
 
 tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
