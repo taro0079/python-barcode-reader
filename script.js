@@ -7,6 +7,7 @@ const context = canvas.getContext("2d")
 const toggleButton = document.getElementById("toggleButton")
 const toggleButtonCustomer = document.getElementById("toggleButtonCustomer")
 const pointCalculateButton = document.getElementById("point-calculator")
+const pointAddButton = document.getElementById("point-add")
 const tabButtons = document.querySelectorAll(".tab-button")
 const tabContents = document.querySelectorAll(".tab-content")
 const canvasCustomer = document.getElementById("canvas-customer")
@@ -51,13 +52,14 @@ toggleButtonCustomer.addEventListener("click", () => {
   }
 })
 
+// ポイント計算ボタン
 pointCalculateButton.addEventListener("click", () => {
   if (products.length === 0 || savedCustomer.length === 0) {
     console.log("商品データまたは顧客データがありません")
   } else {
     const customerId = savedCustomer[0].id
     const productIds = products.map((product) => product.id)
-    fetchCalculatePoint(customerId, productIds)
+    fetchCalculatePoint(customerId, productIds, true)
       .then((response) => {
         console.log(response)
         alert(`付与されるポイントは${response.adding_point}です`)
@@ -68,7 +70,24 @@ pointCalculateButton.addEventListener("click", () => {
   }
 })
 
-const fetchCalculatePoint = (customerId, productIds) => {
+pointAddButton.addEventListener("click", () => {
+  const customerId = savedCustomer[0].id
+  const productIds = products.map((product) => product.id)
+  fetchCalculatePoint(customerId, productIds, false)
+    .then((response) => {
+      console.log(response)
+      alert(
+        "ポイントを付与しました。付与後のpointは" +
+          response.point_after +
+          "です。"
+      )
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+})
+
+const fetchCalculatePoint = (customerId, productIds, flag) => {
   const url = "http://localhost:3000/points/calculate"
   return fetch(url, {
     method: "POST",
@@ -79,7 +98,7 @@ const fetchCalculatePoint = (customerId, productIds) => {
     body: JSON.stringify({
       customer_id: customerId,
       product_ids: productIds,
-      check_flag: true
+      check_flag: flag
     })
   })
     .then((response) => {
