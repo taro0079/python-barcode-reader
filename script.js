@@ -102,7 +102,6 @@ function startScanning() {
 const fetchProduct = (data) => {
   const cachedProduct = localStorage.getItem(`product_${data}`)
   if (cachedProduct) {
-    console.log("Using cached product data")
     return Promise.resolve(JSON.parse(cachedProduct))
   }
 
@@ -116,8 +115,6 @@ const fetchProduct = (data) => {
   })
     .then((response) => {
       if (response.status === 304) {
-        // 304 Not Modifiedの場合、キャッシュを使用
-        console.log("Using cached product data")
         return JSON.parse(cachedProduct)
       }
       if (!response.ok) {
