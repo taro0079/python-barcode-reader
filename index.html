@@ -4,16 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Barcode Scanner</title>
 </head>
 
 <body>
-    <h1>Barcode Scanner</h1>
-    <button id="toggleButton">Start Camera</button>
-    <video id="video" width="1280" height="720" autoplay></video>
-    <canvas id="canvas" width="1280" height="720"></canvas>
-    <p id="output"></p>
+    <div class="tabs">
+        <button class="tab-button" data-tab="product-scan">商品スキャン</button>
+        <button class="tab-button" data-tab="customer-scan">顧客スキャン</button>
+    </div>
+    <div class="tab-content" id="product-scan">
+        <h1>商品スキャン</h1>
+        <button id="toggleButton" class="button">Start Camera</button>
+        <video id="video" width="1280" height="720" autoplay></video>
+        <canvas id="canvas" width="1280" height="720"></canvas>
+        <p id="output"></p>
+    </div>
+    <div class="tab-content" id="customer-scan">
+        <h1>顧客スキャン</h1>
+        <button id="toogle-button-customer" class="button">顧客スキャン</button>
+        <video id="customer-video" width="1280" height="720" autoplay></video>
+        <p>test</p>
+    </div>
     <script src="script.js"></script>
+
 </body>
 
 </html>

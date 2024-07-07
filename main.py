@@ -23,20 +23,18 @@ def decode_barcode():
     image_data = base64.b64decode(data)
     np_arr = np.frombuffer(image_data, np.uint8)
     img = cv.imdecode(np_arr, cv.IMREAD_COLOR)
-    # cv.imwrite("test.jpg", img)
-    # gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    # barcodes = decode(gray)
     barcodes: List[Any] = decode(img)
 
     result: List[Dict[str, Any]] = []
     for barcode in barcodes:
         barcode_data = barcode.data.decode("utf-8")
-        call_product_api(barcode_data)
+        # product = call_product_api(barcode_data)
         rect = barcode.rect
         result.append(
             {
                 "data": barcode_data,
+                # "product": product,
                 "rect": {
                     "left": rect.left,
                     "top": rect.top,
@@ -45,16 +43,15 @@ def decode_barcode():
                 },
             }
         )
-    print(result)
     return jsonify(result)
 
 
-def call_product_api(barcode_data: str):
-    url = "http://localhost:3000/products/code/{}".format(barcode_data)
-    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+# def call_product_api(barcode_data: str):
+#     url = "http://localhost:3000/products/code/{}".format(barcode_data)
+#     headers = {"Content-Type": "application/json", "Accept": "application/json"}
 
-    response = requests.get(url, headers=headers)
-    print(response.json())
+#     response = requests.get(url, headers=headers)
+#     return response.json()
 
 
 if __name__ == "__main__":
